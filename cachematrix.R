@@ -1,38 +1,39 @@
-## Put comments here that give an overall description of what your
-## functions do
 
-## Write a short comment describing this function
-## makeCacheMatrix() checks the defined matrix 
-## Checks its dimension to make sure it is a square matrix
-## Checks the square matrix to make sure its determinant is not zero
-## If the defined matrix has inverse, store its value in makeCacheMatrix()
-## Call makeCacheMatrix() in cacheSolve() to get the inverse of matrix
+## Caculate the Inverse of a square Matrix:
+## makeCacheMatrix stores the value of defined matrix x
+## makeCacheMatrix is a function which creates a special "matrix" object that can 
+## cache its inverse for the input (which is an invertible square matrix)
+## cacheSolve caches its inverse.
+
+## This function creates a special "matrix" object that can cache its inverse.
 
 makeCacheMatrix <- function(x = matrix()) {
-    c <- ncol(x)
-    
-    r <- nrow(x)
-    
-    if (c != r){
-       
-       
-          print("This matrix has no inverse because it is not a square matrix.")
-    }else {
-          d <- det(x)
-          if (d==0){print("This matrix has no inverse because it is determinant is zero.")
-          }else{ myMatrix <- x
-              myMatrix
-          }
-         
-    }
-        
- 
+  inv <- NULL
+  set <- function(y) {
+    x <<- y
+    inv <<- NULL
+  }
+  get <- function() x
+  setInverse <- function(inverse) inv <<- inverse
+  getInverse <- function() inv
+  list(set = set,
+       get = get,
+       setInverse = setInverse,
+       getInverse = getInverse)
 }
 
 
-## Write a short comment describing this function
-
+## This function caculates the inverse of the defined matrix
+## Return the inverse
 cacheSolve <- function(x, ...) {
-  if (is.numeric(makeCacheMatrix(x))){solve(makeCacheMatrix(x))}
-        ## Return a matrix that is the inverse of 'x'
+  
+  inv <- x$getInverse()
+  if (!is.null(inv)) {
+    message("getting cached data")
+    return(inv)
+  }
+  mat <- x$get()
+  inv <- solve(mat, ...)
+  x$setInverse(inv)
+  inv
 }
